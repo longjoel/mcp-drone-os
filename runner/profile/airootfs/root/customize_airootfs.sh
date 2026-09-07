@@ -17,6 +17,10 @@ fi
 groupadd --system mcp-agents || true
 useradd --system --home-dir /var/lib/mcp-drone --shell /bin/bash --gid mcp-agents mcp-control || true
 chown mcp-control:mcp-agents /var/lib/mcp-drone
+if [ -s /etc/mcp-drone/controller_authorized_keys ]; then
+  install -d -m 0700 -o mcp-control -g mcp-agents /var/lib/mcp-drone/.ssh
+  install -m 0600 -o mcp-control -g mcp-agents /etc/mcp-drone/controller_authorized_keys /var/lib/mcp-drone/.ssh/authorized_keys
+fi
 install -d -m 0755 /etc/sudoers.d
 cat > /etc/sudoers.d/mcp-drone-control <<'EOF'
 mcp-control ALL=(root) NOPASSWD: /usr/bin/systemd-run, /usr/bin/systemctl, /usr/bin/journalctl
@@ -25,5 +29,7 @@ chmod 0440 /etc/sudoers.d/mcp-drone-control
 systemctl enable sshd.service
 systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
+systemctl enable avahi-daemon.service
+systemctl enable mcp-drone-info.service
 systemctl enable mcp-drone-dashboard.service
 systemctl enable mcp-drone.target

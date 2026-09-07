@@ -21,6 +21,11 @@ if [ -n "${MCP_DRONE_MANIFEST:-}" ]; then
   cp "$MCP_DRONE_MANIFEST" "$staged_profile/airootfs/etc/mcp-drone/manifest.json"
   cp "$MCP_DRONE_ENROLLMENT" "$staged_profile/airootfs/etc/mcp-drone/enrollment.json"
 fi
+if [ -n "${MCP_DRONE_CONTROLLER_PUBLIC_KEY:-}" ]; then
+  test -f "$MCP_DRONE_CONTROLLER_PUBLIC_KEY" || { echo "controller public key not found: $MCP_DRONE_CONTROLLER_PUBLIC_KEY" >&2; exit 2; }
+  install -D -m 0644 "$MCP_DRONE_CONTROLLER_PUBLIC_KEY" \
+    "$staged_profile/airootfs/etc/mcp-drone/controller_authorized_keys"
+fi
 
 if ! command -v mkarchiso >/dev/null 2>&1; then
   echo "mkarchiso is required; install the Arch 'archiso' package or run this script inside an Arch build container" >&2

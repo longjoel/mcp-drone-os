@@ -1,0 +1,12 @@
+[Unit]
+Description=Announce MCP drone identity and network information
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/mcp-drone-info
+RemainAfterExit=yes
+
+[Install]
+WantedBy=mcp-drone.target

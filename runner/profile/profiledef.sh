@@ -17,4 +17,5 @@ file_permissions=(
   ["/usr/local/libexec/mcp-drone-mcp"]="0:0:0755"
   ["/usr/local/libexec/mcp-drone-dashboard"]="0:0:0755"
   ["/usr/local/bin/mcp-drone-os"]="0:0:0755"
+  ["/usr/local/bin/mcp-drone-info"]="0:0:0755"
 )

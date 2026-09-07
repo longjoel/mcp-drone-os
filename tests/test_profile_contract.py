@@ -17,6 +17,7 @@ def test_usb_image_contains_self_hosted_entrypoints_and_enrollment_write_access(
         "usr/local/libexec/mcp-drone-dashboard",
         "usr/local/libexec/mcp-drone-enroll",
         "usr/local/libexec/mcp-drone-mcp",
+        "usr/local/bin/mcp-drone-info",
     ):
         assert (profile / relative).is_file(), relative
     assert (ROOT / "tools/install-persistent.sh").is_file()
@@ -29,3 +30,7 @@ def test_usb_image_contains_self_hosted_entrypoints_and_enrollment_write_access(
     customize = (profile / "root/customize_airootfs.sh").read_text()
     assert "systemd-firstboot.service" in customize
     assert "/usr/share/zoneinfo/UTC" in customize
+    target = (profile / "etc/systemd/system/mcp-drone.target").read_text()
+    assert "mcp-drone-info.service" in target
+    avahi = (profile / "etc/avahi/services/mcp-drone-ssh.service").read_text()
+    assert "_ssh._tcp" in avahi and "product=mcp-drone-os" in avahi
