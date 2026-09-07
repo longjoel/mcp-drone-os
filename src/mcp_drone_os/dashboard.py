@@ -114,7 +114,7 @@ class Handler(BaseHTTPRequestHandler):
                 if not expected or self.headers.get("X-MCP-Drone-Token") != expected:
                     self._send(403, {"error": "invalid enrollment token"})
                     return
-                result = self.state.register_drone(payload["drone_id"], payload["hostname"], payload["address"], payload.get("capabilities", []), payload.get("slots", 1))
+                result = self.state.register_drone(payload["drone_id"], payload["hostname"], payload["address"], payload.get("capabilities", []), payload.get("slots", 1), payload.get("ssh_user", "mcp-control"))
                 self._send(201, result)
                 return
             if path == "/api/drones/enroll":

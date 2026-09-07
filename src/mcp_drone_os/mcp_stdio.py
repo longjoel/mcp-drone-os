@@ -16,7 +16,7 @@ from .coordinator import Coordinator
 
 TOOLS = [
     {"name": "fleet_snapshot", "description": "Get drones, capacity, and task state.", "inputSchema": {"type": "object"}},
-    {"name": "register_drone", "description": "Register or heartbeat a drone.", "inputSchema": {"type": "object", "required": ["drone_id", "hostname", "address"]}},
+    {"name": "register_drone", "description": "Register or heartbeat a drone. ssh_user may name the SSH account or config alias user.", "inputSchema": {"type": "object", "required": ["drone_id", "hostname", "address"]}},
     {"name": "run_jobs", "description": "Submit and, by default, dispatch one-shot or long-lived jobs as a batch.", "inputSchema": {"type": "object", "required": ["agent_id", "jobs"]}},
     {"name": "stage_bundle", "description": "Copy a local script or directory to one drone once for reuse by many jobs.", "inputSchema": {"type": "object", "required": ["agent_id", "drone_id", "source", "bundle_id"]}},
     {"name": "task_status", "description": "Read one task.", "inputSchema": {"type": "object", "required": ["task_id"]}},

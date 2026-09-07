@@ -18,7 +18,7 @@ class Coordinator:
         # SSH transports from durable registrations on startup.
         for drone in self.state.snapshot():
             if drone["address"]:
-                self.transports[drone["drone_id"]] = SSHDrone(drone["address"])
+                self.transports[drone["drone_id"]] = SSHDrone(drone["address"], user=drone["ssh_user"])
 
     def attach_transport(self, drone_id: str, transport: Any) -> None:
         self.state.drone(drone_id)
@@ -30,7 +30,7 @@ class Coordinator:
     def register_drone(self, **kwargs: Any) -> dict[str, Any]:
         drone = self.state.register_drone(**kwargs)
         if drone["address"] and drone["drone_id"] not in self.transports:
-            self.transports[drone["drone_id"]] = SSHDrone(drone["address"])
+            self.transports[drone["drone_id"]] = SSHDrone(drone["address"], user=drone["ssh_user"])
         return drone
 
     def run_jobs(self, agent_id: str, jobs: list[dict[str, Any]], mode: str = "once",

@@ -15,6 +15,7 @@ SCHEMA = """
 PRAGMA journal_mode=WAL;
 CREATE TABLE IF NOT EXISTS drones (
   drone_id TEXT PRIMARY KEY, hostname TEXT NOT NULL, address TEXT NOT NULL,
+  ssh_user TEXT NOT NULL DEFAULT 'mcp-control',
   capabilities TEXT NOT NULL, slots INTEGER NOT NULL DEFAULT 1,
   used_slots INTEGER NOT NULL DEFAULT 0, status TEXT NOT NULL DEFAULT 'ready',
   last_seen REAL NOT NULL
@@ -48,22 +49,29 @@ class State:
         self.lock = threading.RLock()
         self.db.row_factory = sqlite3.Row
         self.db.executescript(SCHEMA)
+        # Keep databases created before ssh_user usable after an upgrade.
+        columns = {row[1] for row in self.db.execute("PRAGMA table_info(drones)")}
+        if "ssh_user" not in columns:
+            self.db.execute("ALTER TABLE drones ADD COLUMN ssh_user TEXT NOT NULL DEFAULT 'mcp-control'")
 
     def close(self) -> None:
         with self.lock:
             self.db.close()
 
     def register_drone(self, drone_id: str, hostname: str, address: str,
-                       capabilities: list[str], slots: int = 1) -> dict[str, Any]:
+                       capabilities: list[str], slots: int = 1,
+                       ssh_user: str = "mcp-control") -> dict[str, Any]:
         with self.lock:
             if slots < 1:
                 raise ValueError("slots must be positive")
+            if not isinstance(ssh_user, str) or not ssh_user or any(char.isspace() for char in ssh_user):
+                raise ValueError("ssh_user must be a non-empty SSH username")
             now = time.time()
-            self.db.execute("""INSERT INTO drones(drone_id,hostname,address,capabilities,slots,last_seen)
-          VALUES(?,?,?,?,?,?) ON CONFLICT(drone_id) DO UPDATE SET hostname=excluded.hostname,
-          address=excluded.address, capabilities=excluded.capabilities, slots=excluded.slots,
+            self.db.execute("""INSERT INTO drones(drone_id,hostname,address,ssh_user,capabilities,slots,last_seen)
+          VALUES(?,?,?,?,?,?,?) ON CONFLICT(drone_id) DO UPDATE SET hostname=excluded.hostname,
+          address=excluded.address, ssh_user=excluded.ssh_user, capabilities=excluded.capabilities, slots=excluded.slots,
           status='ready', last_seen=excluded.last_seen""",
-              (drone_id, hostname, address, json.dumps(sorted(set(capabilities))), slots, now))
+              (drone_id, hostname, address, ssh_user, json.dumps(sorted(set(capabilities))), slots, now))
             return self.drone(drone_id)
 
     def drone(self, drone_id: str) -> dict[str, Any]:

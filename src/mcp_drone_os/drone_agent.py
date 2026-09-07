@@ -32,6 +32,10 @@ def launch(task_id: str, spec: dict[str, Any]) -> dict[str, Any]:
     if not workspace.is_relative_to(TASK_ROOT):
         raise ValueError("task workspace must stay under /var/lib/mcp-drone/tasks")
     workspace.mkdir(parents=True, exist_ok=True)
+    # The SSH account creates the directory, while systemd runs the command
+    # as the declared agent.  Keep the workspace group-writable so this also
+    # works when the controller and worker accounts differ.
+    workspace.chmod(0o2770)
     properties = ["--property=NoNewPrivileges=yes", "--property=PrivateTmp=yes"]
     run_as = spec.get("run_as", "mcp-control")
     if not isinstance(run_as, str) or not RUN_AS_RE.fullmatch(run_as):

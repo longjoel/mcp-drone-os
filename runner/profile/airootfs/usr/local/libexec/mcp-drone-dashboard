@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 export PYTHONPATH=/opt/mcp-drone-os${PYTHONPATH:+:$PYTHONPATH}
-exec /usr/bin/python -m mcp_drone_os.dashboard "$@"
+exec /usr/bin/python3 -m mcp_drone_os.dashboard "$@"
