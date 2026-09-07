@@ -49,6 +49,10 @@ the first image profile:
 - Enrollment supports agent keys, a separate controller key, and an OpenSSH
   host certificate signed by a coordinator-held CA. Password and root SSH are
   disabled.
+- A preconfigured image boots without a framebuffer login: it creates declared
+  agent accounts, installs the controller key, derives a unique
+  `mcp-drone-<NIC>` hostname, records IP/CPU/memory in
+  `/run/mcp-drone/identity`, and advertises `_ssh._tcp` over mDNS.
 - `runner/profile/` is an ArchISO profile with the minimal runtime package set,
   SSH hardening, first-boot enrollment hook, and systemd target.
 - `tools/test-image.sh` boots a built image in QEMU with SSH forwarded to port
@@ -124,6 +128,22 @@ To bake a runner enrollment bundle into the image, set both
 reference `/etc/mcp-drone/manifest.json`; the builder copies the selected
 manifest to that path. Enrollment tokens are secrets and should not be
 committed to the repository.
+
+To make a USB immediately accept work from one controller, also provide its
+public key at build time. It is copied into the image but is not committed:
+
+```sh
+MCP_DRONE_MANIFEST=manifest.json \
+MCP_DRONE_ENROLLMENT=enrollment.json \
+MCP_DRONE_CONTROLLER_PUBLIC_KEY="$HOME/.ssh/id_ed25519.pub" \
+tools/build-image.sh out-ready
+```
+
+The enrollment manifest declares the agent IDs that become
+`drone-<id>` Unix accounts. Discover a runner with
+`avahi-browse -rt _ssh._tcp`, then register its advertised hostname and SSH
+account with the coordinator. `register_drone` accepts `ssh_user` for hosts
+whose SSH username differs from the default `mcp-control`.
 
 For an offline/preconfigured runner, start with
 `examples/enrollment.json`; add `coordinator_url` and a one-time `token` when
