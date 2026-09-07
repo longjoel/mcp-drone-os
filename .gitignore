@@ -1,0 +1,10 @@
+__pycache__/
+.pytest_cache/
+*.egg-info/
+.venv/
+out/
+out-*/
+work/
+work-*/
+dist/
+qemu-inspect/

@@ -1,0 +1,6 @@
+[Match]
+Name=en* eth* usb*
+
+[Network]
+DHCP=yes
+IPv6AcceptRA=yes

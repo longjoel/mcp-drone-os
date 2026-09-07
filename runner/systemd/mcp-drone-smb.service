@@ -1,0 +1,16 @@
+[Unit]
+Description=Optional mcp-drone per-agent SMB shares
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/etc/samba/mcp-drone-shares.conf
+
+[Service]
+ExecStart=/usr/bin/smbd --foreground --no-process-group --configfile=/etc/samba/smb.conf
+Restart=on-failure
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/srv/mcp-drone
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config=/etc/mcp-drone/enrollment.json
+test -r "$config"
+install -d -m 0750 /var/lib/mcp-drone /srv/mcp-drone
+export PYTHONPATH=/opt/mcp-drone-os
+exec /usr/bin/python -m mcp_drone_os.enroll "$config"

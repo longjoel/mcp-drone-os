@@ -1,0 +1,17 @@
+[Unit]
+Description=mcp-drone-os local dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=mcp-control
+ExecStart=/usr/local/libexec/mcp-drone-dashboard --bind 127.0.0.1
+Restart=on-failure
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/mcp-drone
+
+[Install]
+WantedBy=mcp-drone.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=Enroll this disposable machine as an MCP drone
+After=network-online.target sshd.service
+Wants=network-online.target
+ConditionPathExists=/etc/mcp-drone/enrollment.json
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/mcp-drone-enroll
+RemainAfterExit=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/etc/mcp-drone /etc/ssh /var/lib/mcp-drone /srv/mcp-drone
+
+[Install]
+WantedBy=multi-user.target

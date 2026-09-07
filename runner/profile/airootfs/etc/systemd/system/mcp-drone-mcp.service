@@ -1,0 +1,18 @@
+[Unit]
+Description=mcp-drone-os local MCP gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=mcp-control
+ExecStart=/usr/local/libexec/mcp-drone-mcp
+Restart=on-failure
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/mcp-drone
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=mcp-drone.target

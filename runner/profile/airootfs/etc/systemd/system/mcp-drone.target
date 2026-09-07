@@ -1,0 +1,8 @@
+[Unit]
+Description=mcp-drone runner target
+Wants=sshd.service mcp-drone-enroll.service mcp-drone-dashboard.service
+After=network-online.target
+AllowIsolate=yes
+
+[Install]
+WantedBy=multi-user.target

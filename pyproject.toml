@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-drone-os"
+version = "0.1.0"
+description = "Safe builder and contracts for disposable MCP agent runners"
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+mcp-drone-os = "mcp_drone_os.cli:main"
+mcp-drone-mcp = "mcp_drone_os.mcp_stdio:main"
+mcp-drone-agent = "mcp_drone_os.drone_agent:main"
+mcp-drone-dashboard = "mcp_drone_os.dashboard:main"
+mcp-drone-enroll = "mcp_drone_os.enroll:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

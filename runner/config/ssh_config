@@ -1,0 +1,7 @@
+Host mcp-drone-*
+  ControlMaster auto
+  ControlPersist 10m
+  ControlPath ~/.cache/mcp-drone/ssh/%C
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+  IdentitiesOnly yes

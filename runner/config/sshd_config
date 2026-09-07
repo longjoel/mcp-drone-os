@@ -1,0 +1,8 @@
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+PubkeyAuthentication yes
+AllowGroups mcp-agents
+X11Forwarding no
+AllowTcpForwarding no
+PermitTunnel no

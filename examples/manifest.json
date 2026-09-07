@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "hostname": "mcp-drone",
+  "lan_cidr": "192.168.0.0/16",
+  "persistence": "persistent-capable",
+  "agents": [
+    {
+      "id": "alpha",
+      "display_name": "Alpha",
+      "public_keys": ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK1PZlI/P9Uxt54/1imrBksnWHiwVVi4Mg2n236FocCD example@host"],
+      "quota": {"cpu": 2, "memory_mb": 2048}
+    }
+  ]
+}

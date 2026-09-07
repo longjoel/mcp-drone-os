@@ -1,0 +1,8 @@
+{
+  "drone_id": "drone-alpha-01",
+  "manifest": "/etc/mcp-drone/manifest.json",
+  "address": "",
+  "capabilities": ["cpu", "podman"],
+  "slots": 1,
+  "controller_public_keys": ["ssh-ed25519 AAAA_REPLACE_WITH_COORDINATOR_KEY mcp-drone-controller"]
+}
